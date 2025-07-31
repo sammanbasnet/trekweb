@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
+import axios from "axios";
 import Footer from "../../components/common/customer/Footer";
 import Navbar from "../../components/common/customer/Navbar";
 
@@ -19,19 +20,51 @@ const Review = () => {
     },
   ]);
 
+  const [packages, setPackages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [newReview, setNewReview] = useState({
     name: "",
     rating: 0,
     comment: "",
+    packageId: "",
   });
+
+  // Fetch packages from API
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const res = await axios.get("/api/v1/package/");
+        setPackages(res.data);
+      } catch (error) {
+        console.error("Error fetching packages:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPackages();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newReview.name && newReview.rating && newReview.comment) {
       setReviews([...reviews, { id: reviews.length + 1, ...newReview }]);
-      setNewReview({ name: "", rating: 0, comment: "" });
+      setNewReview({ name: "", rating: 0, comment: "", packageId: "" });
     }
   };
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <div className="container mx-auto px-6 py-20">
+          <p className="text-center text-lg">Loading reviews...</p>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -68,7 +101,19 @@ const Review = () => {
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Leave a Review</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-gray-800 font-semibold">Package</label>
+              <label className="block text-gray-800 font-semibold mb-2">Your Name</label>
+              <input
+                type="text"
+                name="name"
+                value={newReview.name}
+                onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
+                placeholder="Enter your name"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-800 font-semibold mb-2">Package</label>
               <select
                 name="packageId"
                 value={newReview.packageId}
@@ -85,7 +130,7 @@ const Review = () => {
               </select>
             </div>
             <div>
-              <label className="block text-gray-800 font-semibold">Rating</label>
+              <label className="block text-gray-800 font-semibold mb-2">Rating</label>
               <select
                 name="rating"
                 value={newReview.rating}
@@ -102,13 +147,14 @@ const Review = () => {
               </select>
             </div>
             <div>
-              <label className="block text-gray-800 font-semibold">Comment</label>
+              <label className="block text-gray-800 font-semibold mb-2">Comment</label>
               <textarea
                 name="comment"
                 value={newReview.comment}
                 onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
                 rows="4"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
+                placeholder="Share your experience..."
                 required
               ></textarea>
             </div>
