@@ -5,23 +5,10 @@ import Footer from "../../components/common/customer/Footer";
 import Navbar from "../../components/common/customer/Navbar";
 
 const Review = () => {
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      name: "Aarav Sharma",
-      rating: 5,
-      comment: "Amazing experience! The trip to Everest Base Camp was unforgettable.",
-    },
-    {
-      id: 2,
-      name: "Sita Rana",
-      rating: 4.5,
-      comment: "Great service and well-organized tours. Highly recommended!",
-    },
-  ]);
-
+  const [reviews, setReviews] = useState([]);
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   const [newReview, setNewReview] = useState({
     name: "",
@@ -30,27 +17,89 @@ const Review = () => {
     packageId: "",
   });
 
-  // Fetch packages from API
+  // Fetch packages and load reviews from localStorage
   useEffect(() => {
-    const fetchPackages = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get("/api/v1/package/");
-        setPackages(res.data);
+        console.log("Fetching packages...");
+        const packagesRes = await axios.get("/api/v1/package");
+        console.log("Packages response:", packagesRes.data);
+        setPackages(packagesRes.data);
+        
+        // Load reviews from localStorage (for admin dashboard)
+        const savedReviews = localStorage.getItem('trekReviews');
+        if (savedReviews) {
+          setReviews(JSON.parse(savedReviews));
+        } else {
+          // Initial mock reviews
+          const initialReviews = [
+            {
+              _id: 1,
+              name: "Aarav Sharma",
+              rating: 5,
+              comment: "Amazing experience! The trip to Everest Base Camp was unforgettable.",
+              packageName: "Everest Base Camp Trek",
+              status: "Approved"
+            },
+            {
+              _id: 2,
+              name: "Sita Rana",
+              rating: 4.5,
+              comment: "Great service and well-organized tours. Highly recommended!",
+              packageName: "Annapurna Circuit Trek",
+              status: "Approved"
+            },
+          ];
+          setReviews(initialReviews);
+          localStorage.setItem('trekReviews', JSON.stringify(initialReviews));
+        }
       } catch (error) {
-        console.error("Error fetching packages:", error);
+        console.error("Error fetching data:", error);
+        console.error("Error details:", error.response?.data || error.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPackages();
+    fetchData();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (newReview.name && newReview.rating && newReview.comment) {
-      setReviews([...reviews, { id: reviews.length + 1, ...newReview }]);
-      setNewReview({ name: "", rating: 0, comment: "", packageId: "" });
+    if (newReview.name && newReview.rating && newReview.comment && newReview.packageId) {
+      setSubmitting(true);
+      try {
+        // Get package name for the review
+        const selectedPackage = packages.find(pkg => pkg._id === newReview.packageId);
+        
+        const reviewData = {
+          _id: Date.now(), // Generate unique ID
+          name: newReview.name,
+          rating: newReview.rating,
+          comment: newReview.comment,
+          packageId: newReview.packageId,
+          packageName: selectedPackage?.title || "Unknown Package",
+          status: "Pending", // Default status for new reviews
+          createdAt: new Date().toISOString()
+        };
+
+        // Add the new review to local state and localStorage
+        const updatedReviews = [...reviews, reviewData];
+        setReviews(updatedReviews);
+        localStorage.setItem('trekReviews', JSON.stringify(updatedReviews));
+        
+        // Reset form
+        setNewReview({ name: "", rating: 0, comment: "", packageId: "" });
+        
+        alert("Review submitted successfully! It will be reviewed by our team.");
+      } catch (error) {
+        console.error("Error submitting review:", error);
+        alert("Error submitting review. Please try again.");
+      } finally {
+        setSubmitting(false);
+      }
+    } else {
+      alert("Please fill in all fields.");
     }
   };
 
@@ -77,9 +126,10 @@ const Review = () => {
 
         {/* Reviews Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {reviews.map((review) => (
-            <div key={review.id} className="bg-gray-100 p-6 rounded-lg shadow-md">
+          {reviews.filter(review => review.status === "Approved").map((review) => (
+            <div key={review._id} className="bg-gray-100 p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold text-gray-800">{review.name}</h3>
+              <p className="text-sm text-gray-600 mb-2">{review.packageName}</p>
               <div className="flex items-center my-2">
                 {Array.from({ length: 5 }, (_, index) => {
                   if (index + 1 <= review.rating) {
@@ -160,9 +210,12 @@ const Review = () => {
             </div>
             <button
               type="submit"
-              className="bg-red-800 text-white py-2 px-6 rounded-md hover:bg-red-700 transition duration-300"
+              disabled={submitting}
+              className={`bg-red-800 text-white py-2 px-6 rounded-md transition duration-300 ${
+                submitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'
+              }`}
             >
-              Submit Review
+              {submitting ? "Submitting..." : "Submit Review"}
             </button>
           </form>
         </div>
