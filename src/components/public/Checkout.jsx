@@ -60,10 +60,10 @@ const Checkout = () => {
     if (formData.paymentMethod === "esewa") {
       setShowEsewaGateway(true);
     } else {
-      // Cash on delivery flow
+      // Cash on arrival flow
       setIsProcessingPayment(true);
       try {
-        alert("Cash on delivery selected. Payment will be collected upon delivery.");
+        alert("Cash on arrival selected. Payment will be collected upon arrival.");
         
         const bookingData = {
           packageId: id,
@@ -74,7 +74,11 @@ const Checkout = () => {
           pickupLocation: formData.pickupLocation,
           paymentMethod: formData.paymentMethod,
           paymentStatus: "pending",
+          userId: "demo-user-123", // Demo user ID for testing
         };
+
+        // Save user email to localStorage for booking filtering
+        localStorage.setItem("userEmail", formData.email);
 
         const response = await axios.post("/api/v1/bookings", bookingData);
         
@@ -124,7 +128,11 @@ const Checkout = () => {
           pickupLocation: formData.pickupLocation,
           paymentMethod: formData.paymentMethod,
           paymentStatus: "completed",
+          userId: "demo-user-123", // Demo user ID for testing
         };
+
+        // Save user email to localStorage for booking filtering
+        localStorage.setItem("userEmail", formData.email);
 
         const response = await axios.post("/api/v1/bookings", bookingData);
         
@@ -310,14 +318,14 @@ const Checkout = () => {
                     <input
                       type="radio"
                       name="paymentMethod"
-                      value="cash-on-delivery"
-                      checked={formData.paymentMethod === "cash-on-delivery"}
+                      value="cash-on-arrival"
+                      checked={formData.paymentMethod === "cash-on-arrival"}
                       onChange={handleChange}
                       className="text-red-600 focus:ring-red-500"
                     />
                     <div className="flex items-center space-x-2">
                       <span className="text-blue-600 text-xl">💵</span>
-                      <span className="font-medium">Cash on Delivery</span>
+                      <span className="font-medium">Cash on Arrival</span>
                       <span className="text-sm text-gray-500">(Pay when you arrive)</span>
                     </div>
                   </label>
