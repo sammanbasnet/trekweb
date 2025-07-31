@@ -5,6 +5,7 @@ import Footer from "../../components/common/customer/Footer";
 import Navbar from "../../components/common/customer/Navbar";
 import ItineraryDisplay from "../../components/common/customer/ItineraryDisplay";
 
+// Checkout component with eSewa and cash-on-delivery payment options
 const Checkout = () => {
   const { id } = useParams(); // Get package ID from URL
   const navigate = useNavigate();
