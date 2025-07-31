@@ -11,28 +11,32 @@ const MyBooking = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const userId = localStorage.getItem("userId");
-        const token = localStorage.getItem("token");
-
-        if (!userId || !token) {
-          setError("You must be logged in to see your bookings.");
+        // Get current user's email from localStorage
+        const userEmail = localStorage.getItem("userEmail");
+        
+        if (!userEmail) {
+          setBookings([]);
           setLoading(false);
           return;
         }
-
-        const response = await axios.get(
-          `/api/v1/bookings/user/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setBookings(response.data.data || response.data);
+        
+        // Fetch all bookings and filter by user email
+        const response = await axios.get(`/api/v1/bookings`);
+        
+        if (response.data.success) {
+          const allBookings = response.data.data || [];
+          // Filter bookings to show only current user's bookings
+          const userBookings = allBookings.filter(booking => 
+            booking.email === userEmail
+          );
+          setBookings(userBookings);
+        } else {
+          setBookings([]);
+        }
         setLoading(false);
       } catch (err) {
-        setError("Failed to fetch bookings. Please try again later.");
+        console.error("Error fetching bookings:", err);
+        setBookings([]);
         setLoading(false);
       }
     };
@@ -57,7 +61,7 @@ const MyBooking = () => {
     switch (method) {
       case "esewa":
         return "💚";
-      case "cash-on-delivery":
+      case "cash-on-arrival":
         return "💵";
       default:
         return "💳";
@@ -68,8 +72,8 @@ const MyBooking = () => {
     switch (method) {
       case "esewa":
         return "eSewa";
-      case "cash-on-delivery":
-        return "Cash on Delivery";
+      case "cash-on-arrival":
+        return "Cash on Arrival";
       default:
         return method;
     }
@@ -87,6 +91,13 @@ const MyBooking = () => {
         </p>
 
         <div className="flex flex-col items-center space-y-6">
+          {!localStorage.getItem("userEmail") && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+              <p className="text-yellow-800">
+                No user email found. Make a booking first to see your bookings here.
+              </p>
+            </div>
+          )}
           {loading ? (
             <p className="text-gray-800">Loading your bookings...</p>
           ) : error ? (
