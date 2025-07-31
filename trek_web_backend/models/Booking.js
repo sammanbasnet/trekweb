@@ -7,7 +7,8 @@ const bookingSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   tickets: { type: Number, required: true, min: 1 },
   pickupLocation: { type: String },
-  paymentMethod: { type: String, enum: ["credit-card", "debit-card", "upi", "paypal"], required: true },
+  paymentMethod: { type: String, enum: ["esewa", "cash-on-delivery"], required: true },
+  paymentStatus: { type: String, enum: ["pending", "completed", "failed"], default: "pending" },
   status: { type: String, enum: ["pending", "confirmed", "cancelled"], default: "pending" },
   createdAt: { type: Date, default: Date.now },
 });

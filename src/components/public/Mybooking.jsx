@@ -22,14 +22,14 @@ const MyBooking = () => {
 
         const response = await axios.get(
           `/api/v1/bookings/user/${userId}`,
-    {
+          {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
 
-        setBookings(response.data);
+        setBookings(response.data.data || response.data);
         setLoading(false);
       } catch (err) {
         setError("Failed to fetch bookings. Please try again later.");
@@ -50,6 +50,28 @@ const MyBooking = () => {
         return "text-red-600";
       default:
         return "text-gray-600";
+    }
+  };
+
+  const getPaymentMethodIcon = (method) => {
+    switch (method) {
+      case "esewa":
+        return "💚";
+      case "cash-on-delivery":
+        return "💵";
+      default:
+        return "💳";
+    }
+  };
+
+  const formatPaymentMethod = (method) => {
+    switch (method) {
+      case "esewa":
+        return "eSewa";
+      case "cash-on-delivery":
+        return "Cash on Delivery";
+      default:
+        return method;
     }
   };
 
@@ -76,28 +98,55 @@ const MyBooking = () => {
                 className="w-full max-w-4xl p-6 bg-white shadow-lg rounded-lg flex items-start space-x-6"
               >
                 <img
-                  src={booking.package.imageUrl || "https://via.placeholder.com/150"}
-                  alt={booking.package.name}
+                  src={`http://localhost:3000/uploads/${booking.packageId?.image}`}
+                  alt={booking.packageId?.title || "Package"}
                   className="w-32 h-32 object-cover rounded-lg"
                 />
                 <div className="flex-grow">
                   <h2 className="text-2xl font-semibold text-gray-800">
-                    {booking.package.name}
+                    {booking.packageId?.title || "Package"}
                   </h2>
                   <p className="text-gray-600">
                     Booking ID: {booking._id}
                   </p>
                   <p className="text-gray-600">
-                    Date: {new Date(booking.date).toLocaleDateString()}
+                    Booked on: {new Date(booking.createdAt).toLocaleDateString()}
                   </p>
                   <p className="text-gray-600">
-                    Amount: ₹{booking.totalPrice.toLocaleString()}
+                    Full Name: {booking.fullName}
                   </p>
                   <p className="text-gray-600">
-                    Tickets: {booking.participants}
+                    Email: {booking.email}
                   </p>
+                  <p className="text-gray-600">
+                    Phone: {booking.phone}
+                  </p>
+                  <p className="text-gray-600">
+                    Number of People: {booking.tickets}
+                  </p>
+                  <p className="text-gray-600">
+                    Total Amount: ₹{(booking.packageId?.price || 0) * booking.tickets}
+                  </p>
+                  <p className="text-gray-600">
+                    Pickup Location: {booking.pickupLocation || "Not specified"}
+                  </p>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <span className="text-lg">{getPaymentMethodIcon(booking.paymentMethod)}</span>
+                    <span className="text-gray-600">
+                      Payment: {formatPaymentMethod(booking.paymentMethod)}
+                    </span>
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                      booking.paymentStatus === "completed" 
+                        ? "bg-green-100 text-green-800" 
+                        : booking.paymentStatus === "pending"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-red-100 text-red-800"
+                    }`}>
+                      {booking.paymentStatus}
+                    </span>
+                  </div>
                   <p
-                    className={`text-lg font-bold ${getStatusColor(
+                    className={`text-lg font-bold mt-2 ${getStatusColor(
                       booking.status
                     )}`}
                   >

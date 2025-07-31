@@ -27,7 +27,6 @@ const auth = require("./routes/customer");
 
 const package = require("./routes/package");
 const wishlist = require("./routes/WishlistRoute");
-const khaltiRoutes = require("./routes/KhaltiRoute");
 const booking = require("./routes/BookingRoute");
 const destination = require("./routes/DestinationRoute");
 const itinerary = require("./routes/ItineraryRoute");
@@ -70,7 +69,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/api/v1/customers", auth);
 app.use("/api/v1/package", package);
 app.use("/api/v1/wishlist", wishlist);
-app.use("/api/khalti", khaltiRoutes);
 app.use("/api/v1/bookings", booking);
 app.use("/api/v1/destination", destination);
 app.use("/api/v1/itinerary", itinerary);
