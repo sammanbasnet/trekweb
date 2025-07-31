@@ -58,7 +58,7 @@ const Hero = () => {
           description="From exotic beaches to thrilling mountain treks, we have a package for every adventurer."
           buttonText="View All Packages"
           image={packagesImage}
-          onButtonClick={() => navigate("/order")}
+          onButtonClick={() => navigate("/packages")}
         />
         <Section
           title="Contact Us for Custom Packages"
