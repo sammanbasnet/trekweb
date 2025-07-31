@@ -57,6 +57,11 @@ const Checkout = () => {
       return;
     }
 
+    // Prevent multiple submissions
+    if (isProcessingPayment) {
+      return;
+    }
+
     if (formData.paymentMethod === "esewa") {
       setShowEsewaGateway(true);
     } else {
@@ -74,11 +79,13 @@ const Checkout = () => {
           pickupLocation: formData.pickupLocation,
           paymentMethod: formData.paymentMethod,
           paymentStatus: "pending",
-          userId: "demo-user-123", // Demo user ID for testing
         };
 
-        // Save user email to localStorage for booking filtering
+        // Generate unique session ID and update localStorage
+        const sessionId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
         localStorage.setItem("userEmail", formData.email);
+        localStorage.setItem("sessionId", sessionId);
+        console.log("New session created:", { email: formData.email, sessionId });
 
         const response = await axios.post("/api/v1/bookings", bookingData);
         
@@ -128,11 +135,13 @@ const Checkout = () => {
           pickupLocation: formData.pickupLocation,
           paymentMethod: formData.paymentMethod,
           paymentStatus: "completed",
-          userId: "demo-user-123", // Demo user ID for testing
         };
 
-        // Save user email to localStorage for booking filtering
+        // Generate unique session ID and update localStorage
+        const sessionId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
         localStorage.setItem("userEmail", formData.email);
+        localStorage.setItem("sessionId", sessionId);
+        console.log("New session created (eSewa):", { email: formData.email, sessionId });
 
         const response = await axios.post("/api/v1/bookings", bookingData);
         

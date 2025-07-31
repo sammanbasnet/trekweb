@@ -20,6 +20,9 @@ const Login = () => {
     onSuccess: (data) => {
       alert("Login successful! 🎉");
       console.log("User logged in:", data);
+      
+      // Set userEmail to the logged-in user's email
+      localStorage.setItem("userEmail", email);
       localStorage.setItem("userId", data.userId);
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
