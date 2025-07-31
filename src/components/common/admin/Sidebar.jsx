@@ -13,10 +13,6 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Confirmed from "../../private/bookings/Confirmed";
-import Pending from "../../private/bookings/Pending";
-import AddPackages from "../../private/packages/AddPackages";
-import ManagePackages from "../../private/packages/ManagePackages";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -34,8 +30,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem("role"); // Remove token from storage
     window.location.href = "/login"; // Correct way to redirect
-};
-
+  };
 
   return (
     <div className={`h-screen ${isCollapsed ? "w-20" : "w-64"} bg-gray-900 text-white flex flex-col p-4 transition-all duration-300`}>
@@ -63,8 +58,8 @@ const Sidebar = () => {
           </button>
           {!isCollapsed && openMenus.packages && (
             <div className="ml-6 space-y-1 mt-1">
-              <Link onClick={AddPackages} to="/admin/addpackages" className="block p-2 rounded hover:bg-gray-700">Add New</Link>
-              <Link onClick={ManagePackages} to="/admin/managepackages" className="block p-2 rounded hover:bg-gray-700">Manage Packages</Link>
+              <Link to="/admin/addpackages" className="block p-2 rounded hover:bg-gray-700">Add New</Link>
+              <Link to="/admin/managepackages" className="block p-2 rounded hover:bg-gray-700">Manage Packages</Link>
             </div>
           )}
         </div>
@@ -79,8 +74,8 @@ const Sidebar = () => {
           </button>
           {!isCollapsed && openMenus.bookings && (
             <div className="ml-6 space-y-1 mt-1">
-              <Link onClick={Pending} to="/admin/pending" className="block p-2 rounded hover:bg-gray-700">Pending</Link>
-              <Link onClick={Confirmed} to="/admin/confirmed" className="block p-2 rounded hover:bg-gray-700">Confirmed</Link>
+              <Link to="/admin/pending" className="block p-2 rounded hover:bg-gray-700">Pending</Link>
+              <Link to="/admin/confirmed" className="block p-2 rounded hover:bg-gray-700">Confirmed</Link>
             </div>
           )}
         </div>

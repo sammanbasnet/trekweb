@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Footer from "../../components/common/customer/Footer";
 import Navbar from "../../components/common/customer/Navbar";
+import ItineraryDisplay from "../../components/common/customer/ItineraryDisplay";
 
 const Checkout = () => {
   const { id } = useParams(); // Get package ID from URL
@@ -22,7 +23,7 @@ const Checkout = () => {
   useEffect(() => {
     const fetchPackageDetails = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/v1/package/${id}`);
+        const res = await axios.get(`/api/v1/package/${id}`);
         setPackageData(res.data);
       } catch (err) {
         setError("Failed to load package details. Please try again.");
@@ -50,7 +51,7 @@ const Checkout = () => {
 
         // Save booking details after payment success
         axios
-          .post("http://localhost:3000/api/v1/bookings", {
+          .post("/api/v1/bookings", {
             packageId: id,
             fullName: formData.fullName,
             email: formData.email,
@@ -88,6 +89,8 @@ const Checkout = () => {
   if (loading) return <p className="text-center py-10 text-lg">Loading checkout details...</p>;
   if (error) return <p className="text-center text-red-600 py-10">{error}</p>;
 
+  if (!packageData) return <p className="text-center text-red-600 py-10">Package not found.</p>;
+
   return (
     <>
       <Navbar />
@@ -122,23 +125,7 @@ const Checkout = () => {
 
                 {/* Itinerary Section */}
                 <div className="mt-6">
-                  <h4 className="text-lg font-semibold text-gray-700">🛤 Itinerary</h4>
-                  <ul className="space-y-2 mt-2">
-                    {Array.isArray(packageData.itinerary) && packageData.itinerary.length > 0 ? (
-                      packageData.itinerary.map((day, index) => {
-                        let dayData = typeof day === "string" ? JSON.parse(day) : day;
-
-                        return (
-                          <li key={index} className="border-l-4 border-red-500 pl-4 py-2">
-                            <h5 className="text-red-700 font-semibold">Day {index + 1}: {dayData.title || `Day ${index + 1}`}</h5>
-                            <p className="text-gray-600">{dayData.description || dayData}</p>
-                          </li>
-                        );
-                      })
-                    ) : (
-                      <p className="text-gray-500">No itinerary available for this package.</p>
-                    )}
-                  </ul>
+                  <ItineraryDisplay itinerary={packageData.itinerary} title="Trip Itinerary" showDayNumbers={true} />
                 </div>
               </div>
             </div>

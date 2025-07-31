@@ -4,6 +4,7 @@ import { FaCalendarAlt, FaClock, FaHeart, FaMapMarkerAlt, FaTag } from "react-ic
 import { useNavigate, useParams } from "react-router-dom";
 import Footer from "../common/customer/Footer";
 import Navbar from "../common/customer/Navbar";
+import ItineraryDisplay from "../common/customer/ItineraryDisplay";
 
 const PackageDetail = () => {
   const { id } = useParams();
@@ -18,7 +19,7 @@ const PackageDetail = () => {
   useEffect(() => {
     const fetchPackageDetails = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/v1/package/${id}`);
+        const res = await axios.get(`/api/v1/package/${id}`);
         setPackageData(res.data);
       } catch (err) {
         setError("Failed to load package details. Please try again.");
@@ -29,7 +30,7 @@ const PackageDetail = () => {
 
     const fetchWishlistData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/v1/wishlist`, {
+        const res = await axios.get(`/api/v1/wishlist`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const isInWishlist = res.data.wishlist.packages.some((pkg) => pkg._id === id);
@@ -53,7 +54,7 @@ const PackageDetail = () => {
     try {
       if (isFavorite) {
         // Remove from wishlist
-        const res = await axios.delete(`http://localhost:3000/api/v1/wishlist/remove/${id}`, {
+        const res = await axios.delete(`/api/v1/wishlist/remove/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setIsFavorite(false);
@@ -61,7 +62,7 @@ const PackageDetail = () => {
       } else {
         // Add to wishlist
         const res = await axios.post(
-          `http://localhost:3000/api/v1/wishlist/add`,
+          `/api/v1/wishlist/add`,
           { packageId: id },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -95,16 +96,8 @@ const PackageDetail = () => {
         {/* Package Details Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-12">
           {/* Left Side - Itinerary */}
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">📌 Itinerary</h3>
-            <ul className="list-none space-y-4">
-              {packageData.itinerary.map((item, index) => (
-                <li key={index} className="flex items-start space-x-3">
-                  <span className="text-red-700 font-bold text-lg">✔</span>
-                  <span className="text-gray-700 text-lg">{item}</span>
-                </li>
-              ))}
-            </ul>
+          <div>
+            <ItineraryDisplay itinerary={packageData.itinerary} />
           </div>
 
           {/* Right Side - Package Details */}
