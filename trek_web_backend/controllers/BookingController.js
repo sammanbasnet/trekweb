@@ -47,11 +47,11 @@ const cancelBooking = async (req, res) => {
   }
 };
 
-// Get bookings by user ID
-const getBookingsByUserId = async (req, res) => {
+// Get bookings by user email
+const getBookingsByEmail = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const bookings = await Booking.find({ userId }).populate("packageId");
+    const { email } = req.params;
+    const bookings = await Booking.find({ email }).populate("packageId");
     res.status(200).json({ success: true, data: bookings });
   } catch (error) {
     res.status(500).json({ success: false, error: "Failed to fetch user bookings" });
@@ -63,5 +63,5 @@ module.exports = {
   getAllBookings,
   getBookingById,
   cancelBooking,
-  getBookingsByUserId,
+  getBookingsByEmail,
 };
