@@ -100,8 +100,8 @@ const Checkout = () => {
             <h3 className="text-2xl font-bold text-gray-800 mb-4">📌 Booking Summary</h3>
             <div className="flex flex-col items-center">
               <img 
-                src={`http://localhost:3000/uploads/${packageData.image}`} 
-                alt={packageData.title} 
+                src={`http://localhost:3000/uploads/${packageData?.image}`} 
+                alt={packageData?.title} 
                 className="w-full h-64 object-cover rounded-lg shadow-md"
               />
               <div className="mt-4 w-full">

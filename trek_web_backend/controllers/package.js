@@ -52,17 +52,34 @@ exports.getPackageById = async (req, res) => {
 // Update a package
 exports.updatePackage = async (req, res) => {
   try {
-    const { itinerary } = req.body;
-
-    // If itinerary is provided as a string, convert it to an array
+    const { itinerary, availableDates } = req.body;
+    
+    // Prepare update data
+    const updateData = { ...req.body };
+    
+    // Handle itinerary - if it's already an array, use it; if it's a string, split it
     if (itinerary) {
-      req.body.itinerary = itinerary.split("|");
+      if (Array.isArray(itinerary)) {
+        updateData.itinerary = itinerary;
+      } else if (typeof itinerary === 'string') {
+        updateData.itinerary = itinerary.split("|");
+      }
+    }
+    
+    // Handle availableDates - if it's already an array, use it; if it's a string, parse it
+    if (availableDates) {
+      if (Array.isArray(availableDates)) {
+        updateData.availableDates = availableDates.map(date => new Date(date));
+      } else if (typeof availableDates === 'string') {
+        updateData.availableDates = availableDates.split(",").map(date => new Date(date.trim()));
+      }
     }
 
-    const updatedPackage = await Package.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedPackage = await Package.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!updatedPackage) return res.status(404).json({ message: "Package not found" });
     res.status(200).json(updatedPackage);
   } catch (error) {
+    console.error('updatePackage error:', error.stack || error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -74,6 +91,24 @@ exports.deletePackage = async (req, res) => {
     if (!deletedPackage) return res.status(404).json({ message: "Package not found" });
     res.status(200).json({ message: "Package deleted successfully" });
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Upload image for package
+exports.uploadImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file provided" });
+    }
+
+    const image = req.file.filename;
+    res.status(200).json({ 
+      message: "Image uploaded successfully",
+      image: image 
+    });
+  } catch (error) {
+    console.error('uploadImage error:', error.stack || error);
     res.status(500).json({ error: error.message });
   }
 };

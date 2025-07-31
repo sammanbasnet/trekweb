@@ -4,6 +4,7 @@ const packageController = require("../controllers/package");
 const upload = require("../middleware/uploads");
 
 router.post("/", upload.single("image"),packageController.createPackage);
+router.post("/upload-image", upload.single("image"), packageController.uploadImage);
 router.get("/", packageController.getAllPackages);
 router.get("/:id", packageController.getPackageById);
 router.put("/:id", packageController.updatePackage);
