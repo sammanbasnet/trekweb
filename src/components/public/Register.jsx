@@ -88,16 +88,16 @@ const Register = () => {
                 >
                   First Name
                 </label>
-                <input
+              <input 
                   id="fname"
-                  type="text"
-                  name="fname"
+                type="text"
+                name="fname"
                   placeholder="John"
                   className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-                  value={formData.fname}
-                  onChange={handleChange}
-                  required
-                />
+                value={formData.fname}
+                onChange={handleChange}
+                required
+              />
               </div>
               <div className="w-1/2">
                 <label
@@ -106,16 +106,16 @@ const Register = () => {
                 >
                   Last Name
                 </label>
-                <input
+              <input 
                   id="lname"
-                  type="text"
-                  name="lname"
+                type="text"
+                name="lname"
                   placeholder="Doe"
                   className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-                  value={formData.lname}
-                  onChange={handleChange}
-                  required
-                />
+                value={formData.lname}
+                onChange={handleChange}
+                required
+              />
               </div>
             </div>
 
@@ -126,16 +126,16 @@ const Register = () => {
               >
                 Email
               </label>
-              <input
+            <input 
                 id="email"
-                type="email"
-                name="email"
+              type="email"
+              name="email"
                 placeholder="you@example.com"
                 className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
             </div>
 
             <div>
@@ -145,16 +145,16 @@ const Register = () => {
               >
                 Phone Number
               </label>
-              <input
+            <input 
                 id="phone"
-                type="tel"
-                name="phone"
+              type="tel"
+              name="phone"
                 placeholder="123-456-7890"
                 className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-              />
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
             </div>
 
             <div>
@@ -164,16 +164,16 @@ const Register = () => {
               >
                 Password
               </label>
-              <input
+            <input 
                 id="password"
-                type="password"
-                name="password"
+              type="password"
+              name="password"
                 placeholder="Enter your password"
                 className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
             </div>
 
             <div>
@@ -183,20 +183,20 @@ const Register = () => {
               >
                 Confirm Password
               </label>
-              <input
+            <input 
                 id="confirmPassword"
-                type="password"
-                name="confirmPassword"
+              type="password"
+              name="confirmPassword"
                 placeholder="Confirm your password"
                 className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
             </div>
 
-            <button
-              type="submit"
+            <button 
+              type="submit" 
               className="w-full px-4 py-2 font-bold text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
               disabled={mutation.isPending}
             >

@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import Navbar from "../../components/common/admin/Navbar";
 import Sidebar from "../../components/common/admin/Sidebar";
-
-
 import { Outlet } from "react-router-dom";
-
 
 const Layout = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gradient-to-br from-red-50 to-orange-50">
       {/* Sidebar */}
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
@@ -20,8 +17,10 @@ const Layout = () => {
         <Navbar />
 
         {/* Page Content */}
-        <main className="flex-1 p-6 overflow-auto">
-          <Outlet />  {/* Dynamic Nested Route Content */}
+        <main className="flex-1 p-6 overflow-auto bg-gradient-to-br from-white to-red-50">
+          <div className="max-w-7xl mx-auto">
+            <Outlet />  {/* Dynamic Nested Route Content */}
+          </div>
         </main>
       </div>
     </div>

@@ -22,7 +22,7 @@ const MyBooking = () => {
 
         const response = await axios.get(
           `/api/v1/bookings/user/${userId}`,
-          {
+    {
             headers: {
               Authorization: `Bearer ${token}`,
             },

@@ -76,15 +76,15 @@ const Login = () => {
               >
                 Email
               </label>
-              <input
+            <input 
                 id="email"
-                type="email"
+              type="email"
                 placeholder="Enter your email"
                 className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
             </div>
             <div>
               <label
@@ -93,15 +93,15 @@ const Login = () => {
               >
                 Password
               </label>
-              <input
+            <input 
                 id="password"
-                type="password"
+              type="password"
                 placeholder="Enter your password"
                 className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
             </div>
             <div className="text-right">
               <a href="#" className="text-sm text-red-600 hover:underline">
@@ -109,8 +109,8 @@ const Login = () => {
               </a>
             </div>
 
-            <button
-              type="submit"
+            <button 
+              type="submit" 
               className="w-full px-4 py-2 font-bold text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
               disabled={mutation.isPending}
             >
