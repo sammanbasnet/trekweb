@@ -31,6 +31,7 @@ const khaltiRoutes = require("./routes/KhaltiRoute");
 const booking = require("./routes/BookingRoute");
 const destination = require("./routes/DestinationRoute");
 const itinerary = require("./routes/ItineraryRoute");
+const userRoutes = require("./routes/UserRoute");
 
 // Body parser
 app.use(express.json());
@@ -73,6 +74,7 @@ app.use("/api/khalti", khaltiRoutes);
 app.use("/api/v1/bookings", booking);
 app.use("/api/v1/destination", destination);
 app.use("/api/v1/itinerary", itinerary);
+app.use("/api/v1/users", userRoutes);
 
 // Redirect old auth routes to new customer routes for frontend compatibility
 app.use("/api/v1/auth", auth);

@@ -39,9 +39,12 @@ const customerSchema = new mongoose.Schema({
         type: String,
         enum: ["customer", "admin"], // Define roles
         default: "customer", // Default role for new users
+    },
+    status: {
+        type: String,
+        enum: ["Active", "Inactive"], // Define status options
+        default: "Active", // Default status for new users
     }
-
-
 });
 // Encrypt password using bcrypt
 customerSchema.pre("save", async function (next) {
