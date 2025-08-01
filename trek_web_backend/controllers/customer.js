@@ -31,7 +31,7 @@ exports.getCustomer = asyncHandler(async (req, res, next) => {
     }
 
     // Allow access only if admin or the customer himself
-    if (req.user.role !== "admin" && req.user.id !== customer.id) {
+    if (req.user.role !== "admin" && req.user.id !== customer._id.toString()) {
         return res.status(403).json({ message: "Access denied." });
     }
 
@@ -101,11 +101,11 @@ exports.updateCustomer = asyncHandler(async (req, res, next) => {
     }
 
     // Only allow update if admin or the customer himself
-    if (req.user.role !== "admin" && req.user.id !== customer.id) {
+    if (req.user.role !== "admin" && req.user.id !== customer._id.toString()) {
         return res.status(403).json({ message: "Access denied." });
     }
 
-    const { fname, lname, phone, email, role } = req.body;
+    const { fname, lname, phone, email, role, currentPassword, newPassword } = req.body;
     let image = customer.image;
 
     // Check if a new image is uploaded
@@ -117,6 +117,19 @@ exports.updateCustomer = asyncHandler(async (req, res, next) => {
             }
         }
         image = req.file.filename;
+    }
+
+    // Handle password update
+    if (currentPassword && newPassword) {
+        // Verify current password
+        const isPasswordValid = await customer.matchPassword(currentPassword);
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: "Current password is incorrect" });
+        }
+
+        // Update password
+        customer.password = newPassword;
+        await customer.save(); // This will hash the password via pre-save middleware
     }
 
     // Only an admin can change the role
