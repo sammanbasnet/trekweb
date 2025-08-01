@@ -14,6 +14,8 @@ const Myprofile = () => {
     phone: '',
     email: ''
   });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: '',
     newPassword: '',
@@ -176,6 +178,54 @@ const Myprofile = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadProfileImage = async () => {
+    if (!selectedImage) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      
+      if (!token || !userId) {
+        setMessage({ type: 'error', text: 'Authentication required. Please login again.' });
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('profilePicture', selectedImage);
+
+      const response = await axios.put(`http://localhost:3000/api/v1/customers/update/${userId}`, formData, {
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        },
+      });
+
+      if (response.data.success) {
+        setUser({ ...user, image: response.data.data.image });
+        setMessage({ type: 'success', text: 'Profile picture updated successfully!' });
+        setSelectedImage(null);
+        setImagePreview(null);
+        setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+      }
+    } catch (error) {
+      console.error("Error uploading profile image:", error);
+      setMessage({ type: 'error', text: 'Failed to upload profile picture. Please try again.' });
+      setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -218,7 +268,7 @@ const Myprofile = () => {
                     <div className="relative mb-6 md:mb-0">
                       <div className="relative">
                         <img
-                          src={user.image ? `http://localhost:3000/${user.image}` : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Crect width='150' height='150' fill='%23f3f4f6'/%3E%3Ctext x='75' y='75' font-family='Arial' font-size='16' fill='%236b7280' text-anchor='middle' dy='.3em'%3ENo Image%3C/text%3E%3C/svg%3E"}
+                          src={imagePreview || (user.image ? `http://localhost:3000/uploads/${user.image}` : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Crect width='150' height='150' fill='%23f3f4f6'/%3E%3Ctext x='75' y='75' font-family='Arial' font-size='16' fill='%236b7280' text-anchor='middle' dy='.3em'%3ENo Image%3C/text%3E%3C/svg%3E")}
                           alt="Profile"
                           className="w-32 h-32 object-cover rounded-full border-4 border-white shadow-lg"
                         />
@@ -227,7 +277,36 @@ const Myprofile = () => {
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         </div>
+                        
+                        {/* Image Upload Overlay */}
+                        <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                          <label htmlFor="profile-image-upload" className="cursor-pointer">
+                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                          </label>
+                          <input
+                            id="profile-image-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="hidden"
+                          />
+                        </div>
                       </div>
+                      
+                      {/* Upload Button */}
+                      {selectedImage && (
+                        <div className="mt-4 text-center">
+                          <button
+                            onClick={uploadProfileImage}
+                            className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors"
+                          >
+                            Upload Profile Picture
+                          </button>
+                        </div>
+                      )}
                     </div>
                     
                     {/* User Info */}
