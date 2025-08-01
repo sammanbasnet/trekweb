@@ -14,6 +14,7 @@ const Myprofile = () => {
     phone: '',
     email: ''
   });
+  // State for profile image upload functionality
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [passwordForm, setPasswordForm] = useState({
