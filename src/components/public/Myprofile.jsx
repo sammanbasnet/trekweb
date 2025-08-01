@@ -298,7 +298,7 @@ const Myprofile = () => {
                         </div>
                       </div>
                       
-                      {/* Upload Button */}
+                      {/* Upload Button - appears only when image is selected */}
                       {selectedImage && (
                         <div className="mt-4 text-center">
                           <button
