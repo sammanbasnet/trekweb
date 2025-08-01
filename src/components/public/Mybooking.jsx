@@ -139,124 +139,157 @@ const Mybooking = () => {
             </div>
           )}
 
-          {/* Bookings Grid */}
+          {/* Bookings List - Top to Bottom */}
           {!loading && !error && bookings.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
-              {bookings.map((booking) => (
+            <div className="max-w-4xl mx-auto space-y-6">
+              {bookings.map((booking, index) => (
                 <div
                   key={booking._id}
-                  className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden max-w-md mx-auto"
+                  className="bg-white rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2 border-0 overflow-hidden"
                 >
-                  {/* Booking Header */}
-                  <div className="relative h-48">
-                    <img
-                      src={`http://localhost:3000/uploads/${booking.packageId?.image}`}
-                      alt={booking.packageId?.title || "Adventure Package"}
-                      className="w-full h-full object-cover"
-                      onLoad={(e) => {
-                        console.log("Backend image loaded successfully:", e.target.src);
-                      }}
-                      onError={(e) => {
-                        console.log("Backend image failed to load:", e.target.src);
-                        console.log("Package image field:", booking.packageId?.image);
-                        console.log("Full booking data:", booking);
-                        // Show a fallback gradient if image fails
-                        e.target.style.display = 'none';
-                        const fallbackDiv = document.createElement('div');
-                        fallbackDiv.className = 'w-full h-full bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500 flex items-center justify-center';
-                        fallbackDiv.innerHTML = '<span class="text-6xl">🏔️</span>';
-                        e.target.parentNode.appendChild(fallbackDiv);
-                      }}
-                    />
-                    <div className="absolute top-4 right-4">
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold border bg-green-100 text-green-800 border-green-200">
-                        Confirmed
-                      </span>
-                    </div>
-                    <div className="absolute bottom-4 left-4">
-                      <div className="bg-red-800 bg-opacity-5 rounded-lg p-3 backdrop-blur-sm">
-                        <h2 className="text-2xl font-bold text-white mb-1">
-                          {booking.packageId?.title || "Adventure Package"}
-                        </h2>
-                        <p className="text-white text-sm">
-                          Booking ID: {booking._id.slice(-8).toUpperCase()}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Booking Details */}
-                  <div className="p-6">
-                    {/* Date and People */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-gray-500">🗓</span>
-                        <span className="text-gray-700 font-medium">
-                          {new Date(booking.createdAt).toLocaleDateString()}
+                  {/* Main Content Container */}
+                  <div className="flex flex-col lg:flex-row">
+                    {/* Image Section */}
+                    <div className="relative lg:w-1/3 h-64 lg:h-auto">
+                      <img
+                        src={`http://localhost:3000/uploads/${booking.packageId?.image}`}
+                        alt={booking.packageId?.title || "Adventure Package"}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          const fallbackDiv = document.createElement('div');
+                          fallbackDiv.className = 'w-full h-full bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500 flex items-center justify-center';
+                          fallbackDiv.innerHTML = '<span class="text-6xl">🏔️</span>';
+                          e.target.parentNode.appendChild(fallbackDiv);
+                        }}
+                      />
+                      {/* Status Badge */}
+                      <div className="absolute top-4 right-4">
+                        <span className="px-4 py-2 rounded-full text-sm font-bold bg-green-500 text-white shadow-lg">
+                          Confirmed
                         </span>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-gray-500">👥</span>
-                        <span className="text-gray-700 font-medium">
-                          {booking.tickets} {booking.tickets === 1 ? 'Person' : 'People'}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Contact Info */}
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-gray-500">👤</span>
-                        <span className="text-gray-700">{booking.fullName}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-gray-500">📧</span>
-                        <span className="text-gray-700">{booking.email}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-gray-500">📞</span>
-                        <span className="text-gray-700">{booking.phone}</span>
-                      </div>
-                    </div>
-
-                    {/* Payment Information */}
-                    <div className="bg-gray-50 rounded-xl p-4 mb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-gray-600 font-medium">Payment Method</span>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-lg">{getPaymentMethodIcon(booking.paymentMethod)}</span>
-                          <span className="text-gray-700 font-medium">
-                            {formatPaymentMethod(booking.paymentMethod)}
-                          </span>
+                      {/* Package Title Overlay */}
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <div className="bg-black bg-opacity-70 backdrop-blur-sm rounded-xl p-4">
+                          <h2 className="text-xl font-bold text-white mb-1">
+                            {booking.packageId?.title || "Adventure Package"}
+                          </h2>
+                          <p className="text-white text-sm opacity-90">
+                            Booking ID: {booking._id.slice(-8).toUpperCase()}
+                          </p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-600 font-medium">Payment Status</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${
-                          booking.paymentStatus === "completed" 
-                            ? "bg-green-100 text-green-800 border-green-200" 
-                            : booking.paymentStatus === "pending"
-                            ? "bg-yellow-100 text-yellow-800 border-yellow-200"
-                            : "bg-red-100 text-red-800 border-red-200"
-                        }`}>
-                          {booking.paymentStatus}
-                        </span>
-                      </div>
                     </div>
 
-                    {/* Price and Location */}
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-2xl font-bold text-red-600">
-                          ₹{(booking.packageId?.price || 0) * booking.tickets}
-                        </p>
-                        <p className="text-sm text-gray-500">Total Amount</p>
+                    {/* Details Section */}
+                    <div className="lg:w-2/3 p-8">
+                      {/* Header Row */}
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                        <div className="mb-4 sm:mb-0">
+                          <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                            {booking.packageId?.title || "Adventure Package"}
+                          </h3>
+                          <p className="text-gray-600">
+                            {new Date(booking.createdAt).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-red-600">
+                              ₹{(booking.packageId?.price || 0) * booking.tickets}
+                            </div>
+                            <div className="text-sm text-gray-500">Total Amount</div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-sm text-gray-600">
-                          {booking.pickupLocation || "No pickup location"}
-                        </p>
-                        <p className="text-xs text-gray-500">Pickup Location</p>
+
+                      {/* Info Grid */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        {/* Customer Info */}
+                        <div className="space-y-3">
+                          <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                            <span className="mr-2">👤</span>
+                            Customer Details
+                          </h4>
+                          <div className="space-y-2">
+                            <div className="flex items-center space-x-3">
+                              <span className="text-gray-500">👤</span>
+                              <span className="text-gray-700 font-medium">{booking.fullName}</span>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                              <span className="text-gray-500">📧</span>
+                              <span className="text-gray-700">{booking.email}</span>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                              <span className="text-gray-500">📞</span>
+                              <span className="text-gray-700">{booking.phone}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Trip Details */}
+                        <div className="space-y-3">
+                          <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                            <span className="mr-2">🎒</span>
+                            Trip Details
+                          </h4>
+                          <div className="space-y-2">
+                            <div className="flex items-center space-x-3">
+                              <span className="text-gray-500">👥</span>
+                              <span className="text-gray-700 font-medium">
+                                {booking.tickets} {booking.tickets === 1 ? 'Person' : 'People'}
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                              <span className="text-gray-500">📍</span>
+                              <span className="text-gray-700">
+                                {booking.pickupLocation || "No pickup location"}
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                              <span className="text-gray-500">🗓</span>
+                              <span className="text-gray-700">
+                                {new Date(booking.createdAt).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Payment Section */}
+                      <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6">
+                        <h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                          <span className="mr-2">💳</span>
+                          Payment Information
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-600 font-medium">Payment Method</span>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-lg">{getPaymentMethodIcon(booking.paymentMethod)}</span>
+                              <span className="text-gray-700 font-medium">
+                                {formatPaymentMethod(booking.paymentMethod)}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-600 font-medium">Payment Status</span>
+                            <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                              booking.paymentStatus === "completed" 
+                                ? "bg-green-100 text-green-800 border border-green-200" 
+                                : booking.paymentStatus === "pending"
+                                ? "bg-yellow-100 text-yellow-800 border border-yellow-200"
+                                : "bg-red-100 text-red-800 border border-red-200"
+                            }`}>
+                              {booking.paymentStatus}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
