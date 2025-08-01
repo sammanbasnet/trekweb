@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
-const { string } = require("three/webgpu");
 const paymentSchema = new mongoose.Schema({
     bookingId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "bookings"
+        ref: "Booking"
     },
     amount: {
         type: Number,

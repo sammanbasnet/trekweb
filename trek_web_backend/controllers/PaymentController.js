@@ -1,33 +1,46 @@
-const Payment = require('../model/Payment')
+const Payment = require('../models/Payment')
 const findAll = async (req, res) => {
     try {
-        const payments = await Payment.find().populate(["bookingId"]);
-        res.status(200).json(payments);
+        console.log("Fetching payments...");
+        
+        // First try without populate to see if basic query works
+        const payments = await Payment.find();
+        console.log("Raw payments:", payments);
+        
+        // If we have payments, try to populate them
+        if (payments.length > 0) {
+            const populatedPayments = await Payment.find().populate("bookingId");
+            console.log("Populated payments:", populatedPayments);
+            res.status(200).json({ success: true, data: populatedPayments || [] });
+        } else {
+            console.log("No payments found");
+            res.status(200).json({ success: true, data: [] });
+        }
     } catch (e) {
-        res.json(e)
+        console.error("Error fetching payments:", e);
+        res.status(500).json({ success: false, error: e.message });
     }
-
 }
 const save = async (req, res) => {
     try {
-        const { amount, paymentMethod, paymentStatus, PaidAt, } = req.body
+        console.log("Creating payment with data:", req.body);
+        const { amount, method, status, date, bookingId } = req.body;
+        
         const payment = new Payment({
             amount,
-            paymentMethod,
-            paymentStatus,
-            PaidAt,
-            bookingId: req.body.bookingId
-
-
-
-
+            method,
+            status,
+            date,
+            bookingId
         });
+        
         await payment.save();
-        res.status(201).json(payment)
+        console.log("Payment created successfully:", payment);
+        res.status(201).json({ success: true, data: payment });
     } catch (e) {
-        res.json(e)
+        console.error("Error creating payment:", e);
+        res.status(500).json({ success: false, error: e.message });
     }
-
 }
 const findById = async (req, res) => {
     try {
