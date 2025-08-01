@@ -109,6 +109,7 @@ const Myprofile = () => {
     }
   };
 
+  // Handle password change form submission with validation
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     
