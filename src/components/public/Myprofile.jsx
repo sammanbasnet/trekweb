@@ -280,7 +280,7 @@ const Myprofile = () => {
                           </svg>
                         </div>
                         
-                        {/* Image Upload Overlay */}
+                        {/* Image Upload Overlay with hover effect */}
                         <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
                           <label htmlFor="profile-image-upload" className="cursor-pointer">
                             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
