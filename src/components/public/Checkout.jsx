@@ -90,6 +90,21 @@ const Checkout = () => {
         const response = await axios.post("/api/v1/bookings", bookingData);
         
         if (response.data.success) {
+          // Create payment record
+          const paymentData = {
+            bookingId: response.data.booking._id,
+            amount: totalAmount,
+            method: formData.paymentMethod,
+            status: formData.paymentMethod === "esewa" ? "completed" : "pending",
+            date: new Date()
+          };
+          
+          try {
+            await axios.post("/api/v1/payments", paymentData);
+          } catch (error) {
+            console.error("Error creating payment record:", error);
+          }
+          
           alert("Booking Successful! 🚀\nYou will receive a confirmation email shortly.");
           navigate("/mybooking");
         } else {
@@ -146,6 +161,21 @@ const Checkout = () => {
         const response = await axios.post("/api/v1/bookings", bookingData);
         
         if (response.data.success) {
+          // Create payment record for eSewa
+          const paymentData = {
+            bookingId: response.data.booking._id,
+            amount: totalAmount,
+            method: "esewa",
+            status: "completed",
+            date: new Date()
+          };
+          
+          try {
+            await axios.post("/api/v1/payments", paymentData);
+          } catch (error) {
+            console.error("Error creating payment record:", error);
+          }
+          
           alert("eSewa Payment Successful! 🎉\nBooking confirmed!");
           setShowEsewaGateway(false);
           navigate("/mybooking");
