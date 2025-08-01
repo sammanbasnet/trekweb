@@ -15,7 +15,7 @@ const AboutUs = () => {
         <div className="flex flex-col md:flex-row items-center gap-12">
           <div className="md:w-1/2">
             <img 
-              src="/src/assets/images/about.jpg" 
+              src="/src/assets/images/hero.jpg" 
               alt="Trek in Nepal"
               className="w-full h-auto rounded-lg shadow-lg"
             />
@@ -45,19 +45,25 @@ const AboutUs = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Team Member 1 */}
             <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-              <img src="/src/assets/images/team1.jpg" alt="Team Member 1" className="w-32 h-32 rounded-full mx-auto mb-4" />
+              <div className="w-32 h-32 rounded-full mx-auto mb-4 bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+                <span className="text-white text-2xl font-bold">JD</span>
+              </div>
               <h4 className="text-xl font-semibold">John Doe</h4>
               <p className="text-gray-600">Lead Guide</p>
             </div>
             {/* Team Member 2 */}
             <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-              <img src="/src/assets/images/team2.jpg" alt="Team Member 2" className="w-32 h-32 rounded-full mx-auto mb-4" />
+              <div className="w-32 h-32 rounded-full mx-auto mb-4 bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+                <span className="text-white text-2xl font-bold">JS</span>
+              </div>
               <h4 className="text-xl font-semibold">Jane Smith</h4>
               <p className="text-gray-600">Operations Manager</p>
             </div>
             {/* Team Member 3 */}
             <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-              <img src="/src/assets/images/team3.jpg" alt="Team Member 3" className="w-32 h-32 rounded-full mx-auto mb-4" />
+              <div className="w-32 h-32 rounded-full mx-auto mb-4 bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+                <span className="text-white text-2xl font-bold">MJ</span>
+              </div>
               <h4 className="text-xl font-semibold">Mike Johnson</h4>
               <p className="text-gray-600">Customer Support</p>
             </div>

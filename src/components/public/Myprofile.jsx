@@ -35,18 +35,16 @@ const Myprofile = () => {
         const token = localStorage.getItem("token");
         const userId = localStorage.getItem("userId"); // Retrieve userId from localStorage
 
-        console.log("Token:", token);
-        console.log("User ID:", userId);
+        // console.log("Token:", token);
+        // console.log("User ID:", userId);
 
         if (!token) {
-          console.error("Token not found in local storage");
           setMessage({ type: 'error', text: 'Authentication token not found. Please login again.' });
           setLoading(false);
           return;
         }
 
         if (!userId) {
-          console.error("User ID not found in local storage");
           setMessage({ type: 'error', text: 'User ID not found. Please login again.' });
           setLoading(false);
           return;

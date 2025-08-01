@@ -5,15 +5,13 @@ const PackageCard = ({ packageData }) => {
   // Construct the correct image URL
   const imageUrl = `http://localhost:3000/uploads/${packageData.image}`;
   
-  // Debug: Log the image filename
-  console.log(`Package: ${packageData.title}, Image: ${packageData.image}, URL: ${imageUrl}`);
+  // Debug: Log the image filename (commented out to reduce console spam)
+  // console.log(`Package: ${packageData.title}, Image: ${packageData.image}, URL: ${imageUrl}`);
 
   const handleImageError = (e) => {
     console.error(`Failed to load image for ${packageData.title}: ${imageUrl}`);
-    // If image fails to load, use a placeholder or hide the image
-    e.target.style.display = 'none';
-    // Or you can set a fallback image
-    // e.target.src = '/src/assets/images/placeholder.jpg';
+    // Use a fallback image instead of hiding
+    e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23f3f4f6'/%3E%3Ctext x='200' y='100' font-family='Arial' font-size='16' fill='%236b7280' text-anchor='middle' dy='.3em'%3ENo Image Available%3C/text%3E%3C/svg%3E";
   };
 
   return (
