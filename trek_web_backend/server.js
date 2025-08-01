@@ -31,6 +31,7 @@ const booking = require("./routes/BookingRoute");
 const destination = require("./routes/DestinationRoute");
 const itinerary = require("./routes/ItineraryRoute");
 const userRoutes = require("./routes/UserRoute");
+const payment = require("./routes/PaymentRoute");
 
 // Body parser
 app.use(express.json());
@@ -70,6 +71,7 @@ app.use("/api/v1/customers", auth);
 app.use("/api/v1/package", package);
 app.use("/api/v1/wishlist", wishlist);
 app.use("/api/v1/bookings", booking);
+app.use("/api/v1/payments", payment);
 app.use("/api/v1/destination", destination);
 app.use("/api/v1/itinerary", itinerary);
 app.use("/api/v1/users", userRoutes);
