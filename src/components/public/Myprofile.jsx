@@ -191,6 +191,7 @@ const Myprofile = () => {
     }
   };
 
+  // Upload profile image to backend with FormData
   const uploadProfileImage = async () => {
     if (!selectedImage) return;
 
